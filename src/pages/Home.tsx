@@ -1,33 +1,16 @@
-import React, { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useCryptoContext } from '../context/appContext';
 import Table from '../components/Table';
 import { useColumns } from '../hooks/columns';
 
 const Home = () => {
-  const {
-    getTrendingCrypto,
-    loading,
-    trendingCrypto,
-    getSearchCrypto,
-    searchTerm,
-    pageIndex,
-    pageSize,
-  } = useCryptoContext();
-
   const { columns } = useColumns();
+  const { loading, trendingCrypto, pageIndex, pageSize } = useCryptoContext();
 
   const initState = {
     pageSize: pageSize,
     pageIndex: pageIndex,
   };
-
-  useEffect(() => {
-    if (searchTerm === '') {
-      getTrendingCrypto();
-    } else {
-      getSearchCrypto(searchTerm);
-    }
-  }, [searchTerm]);
 
   const data = useMemo(() => [...trendingCrypto], [trendingCrypto]);
   const initialState = useMemo(() => initState, [initState]);

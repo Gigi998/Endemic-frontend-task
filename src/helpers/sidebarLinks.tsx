@@ -1,12 +1,6 @@
 import { AiOutlineHome } from 'react-icons/ai';
 import { GrBookmark } from 'react-icons/gr';
-import { ReactNode } from 'react';
-
-type LinksType = {
-  id: number;
-  icon: ReactNode;
-  url: string;
-};
+import { LinksType } from '../types/trendingCrypto';
 
 export const links: LinksType[] = [
   {

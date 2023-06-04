@@ -91,6 +91,7 @@ export const CryptoProvider = ({ children }: { children: ReactNode }) => {
     const newObj = trendingCrypto.find(obj => obj.name === name);
     // Handle duplicates
     const newArr = favoritesCrypto.find(obj => obj.name === newObj.name);
+    // Already added check
     if (newArr === undefined) {
       setFavoritesCrypto(prev => {
         return [...prev, { ...newObj, isFavorites: 'true' }];
@@ -119,6 +120,11 @@ export const CryptoProvider = ({ children }: { children: ReactNode }) => {
       });
     });
   };
+
+  // Fetch data based on search term
+  useEffect(() => {
+    searchTerm === '' ? getTrendingCrypto() : getSearchCrypto(searchTerm);
+  }, [searchTerm]);
 
   // Save to loc storage
   useEffect(() => {
