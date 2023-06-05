@@ -1,12 +1,13 @@
 import { useMemo } from 'react';
+import { CustomColumn } from '../types/trendingCrypto';
 
 export const useColumns = () => {
-  const columns = useMemo(
+  const columns: CustomColumn[] = useMemo(
     () => [
       {
         Header: 'Image',
         accessor: 'large',
-        Cell: ({ value }: { value: string }) => (
+        Cell: ({ value }: { value: string | undefined }) => (
           <img src={value} alt="Img" style={{ width: '50px' }} className="rounded-xl" />
         ),
       },
@@ -23,7 +24,7 @@ export const useColumns = () => {
         accessor: 'market_cap_rank',
       },
       {
-        Header: 'Price To btc',
+        Header: 'Price To Btc',
         accessor: 'price_btc',
         isVisible: false,
       },

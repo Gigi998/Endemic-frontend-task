@@ -1,10 +1,17 @@
-import { useTable, usePagination } from 'react-table';
+import { useTable, usePagination, Row } from 'react-table';
 import { useCryptoContext } from '../context/appContext';
 import { useEffect, useMemo } from 'react';
-import { GrBookmark } from 'react-icons/gr';
+import { AiFillStar } from 'react-icons/ai';
+import { ColumnType, CustomColumn, InitStateProp } from '../types/trendingCrypto';
 
-export default function Table({ data, columns, initialState }) {
-  const { searchTerm, toggleFavorites, addToFavorites, setPageIndex, removeFromFav } =
+type TablePropsType = {
+  data: ColumnType[];
+  columns: CustomColumn[];
+  initialState?: InitStateProp;
+};
+
+export default function Table({ data, columns, initialState }: TablePropsType) {
+  const { searchTerm, addToFavorites, setPageIndex, removeFromFav, toggleFavorites } =
     useCryptoContext();
 
   // FIlter price_btc column
@@ -58,7 +65,7 @@ export default function Table({ data, columns, initialState }) {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {page.map(row => {
+          {page.map((row: Row<ColumnType>) => {
             prepareRow(row);
             return (
               <tr {...row.getRowProps()}>
@@ -73,11 +80,13 @@ export default function Table({ data, columns, initialState }) {
                               ? removeFromFav(row.original.name)
                               : addToFavorites(row.original.name);
                           }}
-                          className="bg-slate-300"
+                          className="bg-slate-300 block mx-auto"
                         >
-                          <GrBookmark
+                          <AiFillStar
                             fontSize="2rem"
-                            className={cell.value === 'true' ? 'bg-green-500' : 'bg-red-500'}
+                            className={
+                              cell.value === 'true' ? 'bg-[#171822] fill-amber-500' : 'bg-[#171822]'
+                            }
                           />
                         </button>
                       ) : (

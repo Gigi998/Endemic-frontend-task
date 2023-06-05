@@ -15,11 +15,11 @@ type CryptoContext = {
   getSearchCrypto: (value: string) => void;
   pageSize: number;
   pageIndex: number;
-  toggleFavorites: (id: string) => void;
-  addToFavorites: (id: string) => void;
+  toggleFavorites: (name?: string) => void;
+  addToFavorites: (name?: string) => void;
   setPageIndex: React.Dispatch<React.SetStateAction<number>>;
   updateCryptoFromFavorites: () => void;
-  removeFromFav: (name: string) => void;
+  removeFromFav: (name?: string) => void;
 };
 
 const CryptoContext = createContext({} as CryptoContext);
@@ -39,10 +39,15 @@ export const CryptoProvider = ({ children }: { children: ReactNode }) => {
     setLoading(true);
     try {
       const response = await axios.get(trendingEndpoint);
-      setLoading(false);
-      setTrendingCrypto(response.data.coins.map(i => i.item));
-      addInFavoritesProperty();
+      setTrendingCrypto(
+        response.data.coins
+          .map((i: { item: CryptoType }) => i.item)
+          .map((prev: CryptoType) => {
+            return { ...prev, isFavorites: 'false' };
+          })
+      );
       updateCryptoFromFavorites();
+      setLoading(false);
     } catch (error) {
       console.log(error);
       setError(true);
@@ -55,27 +60,21 @@ export const CryptoProvider = ({ children }: { children: ReactNode }) => {
     setLoading(true);
     try {
       const response = await axios.get(`${searchEndpoint}${value}`);
-      setLoading(false);
-      setTrendingCrypto(response.data.coins);
-      addInFavoritesProperty();
+      setTrendingCrypto(
+        response.data.coins.map((prev: any) => {
+          return { ...prev, isFavorites: 'false' };
+        })
+      );
       updateCryptoFromFavorites();
+      setLoading(false);
     } catch (error) {
       console.log(error);
       setError(true);
     }
   };
 
-  // Add isFavorites property
-  const addInFavoritesProperty = () => {
-    setTrendingCrypto(prev => {
-      return prev.map(obj => {
-        return { ...obj, isFavorites: 'false' };
-      });
-    });
-  };
-
   // ToggleFavoritesState
-  const toggleFavorites = (name: string) => {
+  const toggleFavorites = (name?: string) => {
     setTrendingCrypto(prev => {
       return prev.map(obj => {
         if (obj.name === name) {
@@ -87,10 +86,10 @@ export const CryptoProvider = ({ children }: { children: ReactNode }) => {
   };
 
   // Add to fav array
-  const addToFavorites = (name: string) => {
+  const addToFavorites = (name?: string) => {
     const newObj = trendingCrypto.find(obj => obj.name === name);
     // Handle duplicates
-    const newArr = favoritesCrypto.find(obj => obj.name === newObj.name);
+    const newArr = favoritesCrypto.find(obj => obj.name === newObj?.name);
     // Already added check
     if (newArr === undefined) {
       setFavoritesCrypto(prev => {
@@ -102,8 +101,8 @@ export const CryptoProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  // Remove from arr
-  const removeFromFav = (name: string) => {
+  // Remove from fav
+  const removeFromFav = (name?: string) => {
     const newArr = favoritesCrypto.filter(i => i.name !== name);
     setFavoritesCrypto(newArr);
   };
