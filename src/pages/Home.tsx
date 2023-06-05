@@ -1,11 +1,11 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useCryptoContext } from '../context/appContext';
 import Table from '../components/Table';
 import { useColumns } from '../hooks/columns';
 
 const Home = () => {
   const { columns } = useColumns();
-  const { loading, trendingCrypto, pageIndex, pageSize } = useCryptoContext();
+  const { loading, trendingCrypto, pageIndex, pageSize, setSearchTerm } = useCryptoContext();
 
   const initState = {
     pageSize: pageSize,
@@ -14,6 +14,10 @@ const Home = () => {
 
   const data = useMemo(() => [...trendingCrypto], [trendingCrypto]);
   const initialState = useMemo(() => initState, [initState]);
+
+  useEffect(() => {
+    setSearchTerm('');
+  }, []);
 
   if (loading) {
     return <div className="loading"></div>;

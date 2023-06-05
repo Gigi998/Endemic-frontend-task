@@ -10,7 +10,7 @@ const Layout = () => {
     <div className="main-container flex rounded-xl border-8 border-slate-600 outline-offset-8">
       <Sidebar />
       <div className="flex-1 p-5">
-        {location.pathname !== '/favorites' && <Navbar />}
+        {location.pathname === '/' && <Navbar />}
         <Outlet />
       </div>
     </div>
