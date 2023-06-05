@@ -36,6 +36,7 @@ body {
   min-height: 500px;
 }
 
+/* Table */
 .main-table{
   border: border-collapse;
   border: 1px solid var(--border-color);
@@ -46,6 +47,7 @@ tbody tr {
   border: 1px solid var(--border-color);
 }
 
+/* Loading */
 @keyframes spinner {
   0% {
       transform: rotate(0deg);
@@ -65,4 +67,19 @@ tbody tr {
   border-bottom-color: transparent ;
   animation: spinner 0.6s linear infinite;
   margin: 7rem auto 0 auto;
+}
+
+/* SIdebar links */
+.sidebar-link {
+  display: flex;
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+  border-radius: 12px;
+  margin-top: 20px;
+  padding: 12px;
+}
+
+.sidebar-link:hover{
+  --tw-bg-opacity: 1;
+    background-color: rgb(103 232 249 / var(--tw-bg-opacity));
 }

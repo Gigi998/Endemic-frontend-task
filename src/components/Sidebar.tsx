@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { links } from '../helpers/sidebarLinks';
 import { useCryptoContext } from '../context/appContext';
 
@@ -13,13 +13,15 @@ const Sidebar = () => {
       {links.map(link => {
         const { id, url, icon } = link;
         return (
-          <Link
+          <NavLink
             to={url}
             key={id}
-            className="flex text-3xl hover:bg-cyan-300 ease-in-out duration-500 active:bg-cyan-700 focus:bg-cyan-500 p-3 rounded-xl mt-5"
+            className={({ isActive }) =>
+              isActive ? 'sidebar-link bg-cyan-500' : 'sidebar-link  ease-in-out duration-500'
+            }
           >
             <h2>{icon}</h2>
-          </Link>
+          </NavLink>
         );
       })}
     </div>
