@@ -1,4 +1,4 @@
-import { useTable, usePagination, Row } from 'react-table';
+import { useTable, usePagination, Row, useSortBy } from 'react-table';
 import { useCryptoContext } from '../context/appContext';
 import { useEffect, useMemo } from 'react';
 import { AiFillStar } from 'react-icons/ai';
@@ -43,6 +43,7 @@ export default function Table({ data, columns, initialState }: TablePropsType) {
       data,
       initialState,
     },
+    useSortBy,
     usePagination
   );
 
@@ -56,9 +57,17 @@ export default function Table({ data, columns, initialState }: TablePropsType) {
         <thead>
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()} className="bg-cyan-600 text-left h-10">
-              {headerGroup.headers.map(header => (
-                <th {...header.getHeaderProps()} className="px-2 font-bold">
-                  {header.render('Header')}
+              {headerGroup.headers.map(column => (
+                <th
+                  // @ts-ignore
+                  {...column.getHeaderProps(column.getSortByToggleProps())}
+                  className="px-2 font-bold"
+                >
+                  {column.render('Header')}
+                  <span>
+                    {/* @ts-ignore */}
+                    {column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}
+                  </span>
                 </th>
               ))}
             </tr>
