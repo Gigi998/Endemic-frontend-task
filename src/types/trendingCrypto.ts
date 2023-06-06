@@ -7,7 +7,7 @@ export type CryptoType = {
   symbol?: string;
   market_cap_rank?: number;
   large?: string;
-  price_btc?: number;
+  price_btc?: string;
   isFavorites?: string;
 };
 
@@ -22,7 +22,7 @@ export type ColumnType = {
   symbol?: string;
   market_cap_rank?: number;
   large?: string;
-  price_btc?: number;
+  price_btc?: string;
   isFavorites?: string;
 };
 

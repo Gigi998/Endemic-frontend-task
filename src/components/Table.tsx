@@ -1,6 +1,6 @@
 import { useTable, usePagination, Row, useSortBy } from 'react-table';
 import { useCryptoContext } from '../context/appContext';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { AiFillStar } from 'react-icons/ai';
 import { ColumnType, CustomColumn, InitStateProp } from '../types/trendingCrypto';
 
@@ -11,8 +11,14 @@ type TablePropsType = {
 };
 
 export default function Table({ data, columns, initialState }: TablePropsType) {
-  const { searchTerm, addToFavorites, setPageIndex, removeFromFav, toggleFavorites } =
-    useCryptoContext();
+  const {
+    searchTerm,
+    addToFavorites,
+    setPageIndex,
+    removeFromFav,
+    toggleFavorites,
+    setTrendingCrypto,
+  } = useCryptoContext();
 
   // FIlter price_btc column
   const filteredColumns = useMemo(() => {
@@ -26,15 +32,10 @@ export default function Table({ data, columns, initialState }: TablePropsType) {
     getTableProps,
     getTableBodyProps,
     headerGroups,
-    // @ts-ignore
     page,
-    // @ts-ignore
     previousPage,
-    // @ts-ignore
     nextPage,
-    // @ts-ignore
     pageOptions,
-    // @ts-ignore
     state: { pageIndex, pageSize },
     prepareRow,
   } = useTable(
@@ -59,15 +60,11 @@ export default function Table({ data, columns, initialState }: TablePropsType) {
             <tr {...headerGroup.getHeaderGroupProps()} className="bg-cyan-600 text-left h-10">
               {headerGroup.headers.map(column => (
                 <th
-                  // @ts-ignore
                   {...column.getHeaderProps(column.getSortByToggleProps())}
                   className="px-2 font-bold"
                 >
                   {column.render('Header')}
-                  <span>
-                    {/* @ts-ignore */}
-                    {column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}
-                  </span>
+                  <span>{column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}</span>
                 </th>
               ))}
             </tr>

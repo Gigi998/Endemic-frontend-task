@@ -20,6 +20,7 @@ type CryptoContext = {
   setPageIndex: React.Dispatch<React.SetStateAction<number>>;
   updateCryptoFromFavorites: () => void;
   removeFromFav: (name?: string) => void;
+  setTrendingCrypto: React.Dispatch<React.SetStateAction<CryptoType[]>>;
 };
 
 const CryptoContext = createContext({} as CryptoContext);
@@ -46,6 +47,7 @@ export const CryptoProvider = ({ children }: { children: ReactNode }) => {
             return { ...prev, isFavorites: 'false' };
           })
       );
+      convertPrice();
       updateCryptoFromFavorites();
       setLoading(false);
     } catch (error) {
@@ -130,6 +132,27 @@ export const CryptoProvider = ({ children }: { children: ReactNode }) => {
     saveFavToLocStor(favoritesCrypto);
   }, [favoritesCrypto]);
 
+  // Convert price
+  const convertPrice = () => {
+    setTrendingCrypto(prev => {
+      return prev.map(obj => {
+        // If price includes "e"
+        if (obj.price_btc && obj.price_btc.toString().includes('e')) {
+          let priceString = obj.price_btc.toString();
+          // math
+          const base = Number(priceString.slice(0, 4));
+          const power = Number(priceString.slice(-2));
+          // to fixed amount of decimals
+          const fixedPrice = (base ** 1 / 10 ** power).toFixed(18);
+          return { ...obj, price_btc: fixedPrice };
+        }
+        // important!! every number(price) needs to have the same size
+        const newPriceFormat = Number(obj.price_btc).toFixed(18);
+        return { ...obj, price_btc: newPriceFormat };
+      });
+    });
+  };
+
   return (
     <CryptoContext.Provider
       value={{
@@ -148,6 +171,7 @@ export const CryptoProvider = ({ children }: { children: ReactNode }) => {
         setPageIndex,
         updateCryptoFromFavorites,
         removeFromFav,
+        setTrendingCrypto,
       }}
     >
       {children}
