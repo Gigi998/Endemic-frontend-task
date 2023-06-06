@@ -5,7 +5,8 @@ import { useColumns } from '../hooks/columns';
 
 const Home = () => {
   const { columns } = useColumns();
-  const { loading, trendingCrypto, pageIndex, pageSize, setSearchTerm } = useCryptoContext();
+  const { loading, trendingCrypto, pageIndex, pageSize, setSearchTerm } =
+    useCryptoContext();
 
   const initState = {
     pageSize: pageSize,

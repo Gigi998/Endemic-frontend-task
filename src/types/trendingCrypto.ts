@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { Column, TableState } from 'react-table';
 
 export type CryptoType = {
-  coin_id?: number | undefined;
+  coin_id?: number;
   name?: string;
   symbol?: string;
   market_cap_rank?: number;

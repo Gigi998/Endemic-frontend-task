@@ -69,7 +69,7 @@ tbody tr {
   margin: 7rem auto 0 auto;
 }
 
-/* SIdebar links */
+/* Sidebar links */
 .sidebar-link {
   display: flex;
   font-size: 1.875rem;
@@ -80,6 +80,5 @@ tbody tr {
 }
 
 .sidebar-link:hover{
-  --tw-bg-opacity: 1;
-    background-color: rgb(103 232 249 / var(--tw-bg-opacity));
+    background-color: rgb(103 232 249 / 1);
 }

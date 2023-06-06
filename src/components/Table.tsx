@@ -1,8 +1,9 @@
 import { useTable, usePagination, Row, useSortBy } from 'react-table';
 import { useCryptoContext } from '../context/appContext';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { AiFillStar } from 'react-icons/ai';
 import { ColumnType, CustomColumn, InitStateProp } from '../types/trendingCrypto';
+import { useNavigate } from 'react-router-dom';
 
 type TablePropsType = {
   data: ColumnType[];
@@ -11,15 +12,10 @@ type TablePropsType = {
 };
 
 export default function Table({ data, columns, initialState }: TablePropsType) {
-  const {
-    searchTerm,
-    addToFavorites,
-    setPageIndex,
-    removeFromFav,
-    toggleFavorites,
-    setTrendingCrypto,
-  } = useCryptoContext();
+  const { searchTerm, addToFavorites, setPageIndex, removeFromFav, toggleFavorites } =
+    useCryptoContext();
 
+  const navigate = useNavigate();
   // FIlter price_btc column
   const filteredColumns = useMemo(() => {
     if (searchTerm === '') {
@@ -36,7 +32,7 @@ export default function Table({ data, columns, initialState }: TablePropsType) {
     previousPage,
     nextPage,
     pageOptions,
-    state: { pageIndex, pageSize },
+    state: { pageIndex },
     prepareRow,
   } = useTable(
     {
@@ -84,7 +80,10 @@ export default function Table({ data, columns, initialState }: TablePropsType) {
                             toggleFavorites(row.original.name);
                             cell.value === 'true'
                               ? removeFromFav(row.original.name)
-                              : addToFavorites(row.original.name);
+                              : (() => {
+                                  addToFavorites(row.original.name);
+                                  navigate('/favorites');
+                                })();
                           }}
                           className="bg-slate-300 block mx-auto"
                         >
