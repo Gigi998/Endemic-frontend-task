@@ -10,5 +10,5 @@ npm run install && npm start
 
 #### CSS
 
-Global styles => index.css
+Global styles => index.css,
 Tailwind
