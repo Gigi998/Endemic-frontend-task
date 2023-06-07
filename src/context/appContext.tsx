@@ -8,9 +8,11 @@ type CryptoContext = {
   trendingCrypto: CryptoType[];
   favoritesCrypto: CryptoType[];
   getTrendingCrypto: () => void;
+
   searchTerm: string;
   setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
   loading: boolean;
+
   error: boolean;
   getSearchCrypto: (value: string) => void;
   pageSize: number;
@@ -44,7 +46,10 @@ export const CryptoProvider = ({ children }: { children: ReactNode }) => {
         response.data.coins
           .map((i: { item: CryptoType }) => i.item)
           .map((prev: CryptoType) => {
-            return { ...prev, isFavorites: 'false' };
+            return {
+              ...prev,
+              isFavorites: 'false',
+            };
           })
       );
       convertPrice();
@@ -77,10 +82,13 @@ export const CryptoProvider = ({ children }: { children: ReactNode }) => {
 
   // ToggleFavoritesState
   const toggleFavorites = (name?: string) => {
-    setTrendingCrypto(prev => {
-      return prev.map(obj => {
+    setTrendingCrypto((prev) => {
+      return prev.map((obj) => {
         if (obj.name === name) {
-          return { ...obj, isFavorites: obj.isFavorites === 'false' ? 'true' : 'false' };
+          return {
+            ...obj,
+            isFavorites: obj.isFavorites === 'false' ? 'true' : 'false',
+          };
         }
         return obj;
       });
@@ -89,31 +97,31 @@ export const CryptoProvider = ({ children }: { children: ReactNode }) => {
 
   // Add to fav array
   const addToFavorites = (name?: string) => {
-    const newObj = trendingCrypto.find(obj => obj.name === name);
+    const newObj = trendingCrypto.find((obj) => obj.name === name);
     // Handle duplicates
-    const newArr = favoritesCrypto.find(obj => obj.name === newObj?.name);
+    const newArr = favoritesCrypto.find((obj) => obj.name === newObj?.name);
     // Already added check
     if (newArr === undefined) {
-      setFavoritesCrypto(prev => {
+      setFavoritesCrypto((prev) => {
         return [...prev, { ...newObj, isFavorites: 'true' }];
       });
     }
-    setFavoritesCrypto(prev => {
+    setFavoritesCrypto((prev) => {
       return [...prev];
     });
   };
 
   // Remove from fav
   const removeFromFav = (name?: string) => {
-    const newArr = favoritesCrypto.filter(i => i.name !== name);
+    const newArr = favoritesCrypto.filter((i) => i.name !== name);
     setFavoritesCrypto(newArr);
   };
 
   // Update trending array after we get the data
   const updateCryptoFromFavorites = () => {
-    setTrendingCrypto(prev => {
-      return prev.map(obj2 => {
-        const match = favoritesCrypto.find(obj1 => obj1.name === obj2.name);
+    setTrendingCrypto((prev) => {
+      return prev.map((obj2) => {
+        const match = favoritesCrypto.find((obj1) => obj1.name === obj2.name);
         if (match) {
           return { ...obj2, isFavorites: 'true' };
         }
@@ -133,9 +141,9 @@ export const CryptoProvider = ({ children }: { children: ReactNode }) => {
   }, [favoritesCrypto]);
 
   // Convert price
-  const convertPrice = () => {
-    setTrendingCrypto(prev => {
-      return prev.map(obj => {
+  const convertPrice = async () => {
+    setTrendingCrypto((prev) => {
+      return prev.map((obj) => {
         // If price includes "e"
         if (obj.price_btc && obj.price_btc.toString().includes('e')) {
           let priceString = obj.price_btc.toString();
@@ -144,11 +152,11 @@ export const CryptoProvider = ({ children }: { children: ReactNode }) => {
           const power = Number(priceString.slice(-2));
           // to fixed amount of decimals
           const fixedPrice = (base ** 1 / 10 ** power).toFixed(18);
-          return { ...obj, price_btc: fixedPrice };
+          return { ...obj, price_btc: fixedPrice.slice(0, 15) };
         }
         // important!! every number(price) needs to have the same size
         const newPriceFormat = Number(obj.price_btc).toFixed(18);
-        return { ...obj, price_btc: newPriceFormat };
+        return { ...obj, price_btc: newPriceFormat.slice(0, 15) };
       });
     });
   };
