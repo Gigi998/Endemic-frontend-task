@@ -8,11 +8,9 @@ type CryptoContext = {
   trendingCrypto: CryptoType[];
   favoritesCrypto: CryptoType[];
   getTrendingCrypto: () => void;
-
   searchTerm: string;
   setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
   loading: boolean;
-
   error: boolean;
   getSearchCrypto: (value: string) => void;
   pageSize: number;
@@ -48,11 +46,11 @@ export const CryptoProvider = ({ children }: { children: ReactNode }) => {
           .map((prev: CryptoType) => {
             return {
               ...prev,
+              price_btc: Number(prev.price_btc).toFixed(13),
               isFavorites: 'false',
             };
           })
       );
-      convertPrice();
       updateCryptoFromFavorites();
       setLoading(false);
     } catch (error) {
@@ -139,27 +137,6 @@ export const CryptoProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     saveFavToLocStor(favoritesCrypto);
   }, [favoritesCrypto]);
-
-  // Convert price
-  const convertPrice = async () => {
-    setTrendingCrypto((prev) => {
-      return prev.map((obj) => {
-        // If price includes "e"
-        if (obj.price_btc && obj.price_btc.toString().includes('e')) {
-          let priceString = obj.price_btc.toString();
-          // math
-          const base = Number(priceString.slice(0, 4));
-          const power = Number(priceString.slice(-2));
-          // to fixed amount of decimals
-          const fixedPrice = (base ** 1 / 10 ** power).toFixed(18);
-          return { ...obj, price_btc: fixedPrice.slice(0, 15) };
-        }
-        // important!! every number(price) needs to have the same size
-        const newPriceFormat = Number(obj.price_btc).toFixed(18);
-        return { ...obj, price_btc: newPriceFormat.slice(0, 15) };
-      });
-    });
-  };
 
   return (
     <CryptoContext.Provider
