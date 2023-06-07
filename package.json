@@ -23,9 +23,11 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "prebuild": "npm run generate-redirects",
     "build": "CI= react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "generate-redirects": "echo '/*    /index.html   200' > build/_redirects"
   },
   "eslintConfig": {
     "extends": [
