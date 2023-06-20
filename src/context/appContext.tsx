@@ -1,8 +1,15 @@
-import { createContext, useContext, ReactNode, useState, useEffect } from 'react';
+import {
+  createContext,
+  useContext,
+  ReactNode,
+  useState,
+  useEffect,
+} from 'react';
 import { CryptoType } from '../types/trendingCrypto';
 import { trendingEndpoint, searchEndpoint } from '../helpers/urls';
 import axios from 'axios';
 import { getFromLocStor, saveFavToLocStor } from '../helpers/localStorage';
+import useDebounce from '../hooks/useDebounce';
 
 type CryptoContext = {
   trendingCrypto: CryptoType[];
@@ -27,12 +34,16 @@ const CryptoContext = createContext({} as CryptoContext);
 
 export const CryptoProvider = ({ children }: { children: ReactNode }) => {
   const [trendingCrypto, setTrendingCrypto] = useState<CryptoType[]>([]);
-  const [favoritesCrypto, setFavoritesCrypto] = useState<CryptoType[]>(getFromLocStor());
+  const [favoritesCrypto, setFavoritesCrypto] = useState<CryptoType[]>(
+    getFromLocStor()
+  );
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [pageSize, setPageSize] = useState(20);
   const [pageIndex, setPageIndex] = useState(0);
+
+  const debouncedValue = useDebounce(searchTerm);
 
   // Fetch trending
   const getTrendingCrypto = async () => {
@@ -130,8 +141,10 @@ export const CryptoProvider = ({ children }: { children: ReactNode }) => {
 
   // Fetch data based on search term
   useEffect(() => {
-    searchTerm === '' ? getTrendingCrypto() : getSearchCrypto(searchTerm);
-  }, [searchTerm]);
+    debouncedValue === ''
+      ? getTrendingCrypto()
+      : getSearchCrypto(debouncedValue);
+  }, [debouncedValue]);
 
   // Save to loc storage
   useEffect(() => {
